@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  neo4j:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chorus-neo4j
+    restart: unless-stopped
+    
+    ports:
+      - "${NEO4J_HTTP_PORT:-7474}:7474"   # HTTP
+      - "${NEO4J_HTTPS_PORT:-7473}:7473"  # HTTPS
+      - "${NEO4J_BOLT_PORT:-7687}:7687"   # Bolt protocol
+    
+    environment:
+      # Authentication
+      - NEO4J_AUTH=${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:-chorus_password_change_me}
+      
+      # Memory settings
+      - NEO4J_dbms_memory_heap_initial__size=${NEO4J_HEAP_INITIAL:-512m}
+      - NEO4J_dbms_memory_heap_max__size=${NEO4J_HEAP_MAX:-2G}
+      - NEO4J_dbms_memory_pagecache_size=${NEO4J_PAGECACHE:-1G}
+      
+      # Security settings for APOC
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
+      - NEO4J_dbms_security_procedures_allowlist=apoc.*
+      
+      # Connector settings
+      - NEO4J_server_bolt_listen__address=0.0.0.0:7687
+      - NEO4J_server_http_listen__address=0.0.0.0:7474
+      
+      # License agreement
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+      
+    volumes:
+      # Data persistence
+      - ./data:/data
+      - ./logs:/logs
+      - ./plugins:/plugins
+      
+      # Initialization scripts
+      - ./scripts:/scripts:ro
+    
+    networks:
+      - chorus-network
+    
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:7474 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  chorus-network:
+    driver: bridge
+    name: chorus-network
+
+volumes:
+  neo4j-data:
+    driver: local
+  neo4j-logs:
+    driver: local
