@@ -1,6 +1,6 @@
 # Neo4j Chorus - Knowledge Graph Service
 
-[![Neo4j](https://img.shields.io/badge/Neo4j-5.15-blue.svg)](https://neo4j.com/)
+[![Neo4j](https://img.shields.io/badge/Neo4j-5.26-blue.svg)](https://neo4j.com/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-blue.svg)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
