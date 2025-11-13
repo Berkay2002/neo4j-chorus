@@ -1,7 +1,7 @@
 # Neo4j Dockerfile for Chorus Knowledge Graph
 # Based on Neo4j 5.x Community Edition with APOC plugin
 
-FROM neo4j:5.15.0-community
+FROM neo4j:5.23.0-community
 
 # Set labels for metadata
 LABEL maintainer="Chorus Team"
@@ -10,7 +10,7 @@ LABEL version="1.0.0"
 
 # Install APOC plugin (Awesome Procedures on Cypher)
 # APOC provides hundreds of useful procedures and functions
-ENV APOC_VERSION=5.15.0
+ENV APOC_VERSION=5.23.0
 RUN wget -P /var/lib/neo4j/plugins https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/${APOC_VERSION}/apoc-${APOC_VERSION}-core.jar
 
 # Configure Neo4j settings
